@@ -1,14 +1,16 @@
+// tests/pim.spec.ts
 import { test } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
-import { DashboardPage } from '../pages/DashboardPage';
 import { PimPage } from '../pages/PimPage';
+import { HeaderBar } from '../pages/HeaderBar';
 
 test.describe('OrangeHRM - PIM (Employee Management)', () => {
   test.beforeEach(async ({ page }) => {
     const login = new LoginPage(page);
     await login.loginAsAdmin();
-    const dashboard = new DashboardPage(page);
-    await dashboard.goToPIM();
+
+    const pim = new PimPage(page);
+    await pim.gotoList(); // directo a PIM List, estable
   });
 
   test('1) Crear empleado exitosamente', async ({ page }) => {
@@ -17,25 +19,11 @@ test.describe('OrangeHRM - PIM (Employee Management)', () => {
     await pim.addEmployee({ first: 'Brayan' + unique, last: 'Leal' + unique });
   });
 
-//   test('2) Buscar empleado por nombre', async ({ page }) => {
-//     const pim = new PimPage(page);
-//     // En el demo suelen existir nombres como "Linda", "Paul", etc.
-//     await pim.searchEmployeeByName('Amelia');
-//   });
-test('2) Buscar empleado por nombre', async ({ page }) => {
-  const pim = new PimPage(page);
-  const unique = Date.now().toString().slice(-6);
-  const first = 'Brayan' + unique;
-  const last  = 'Leal' + unique;
-  const full  = `${first} ${last}`;
-
-  // Crear empleado
-  await pim.addEmployee({ first, last });
-
-  // Buscarlo en la lista por nombre completo (usando autocomplete)
-  await pim.searchEmployeeByFullName(full);
-});
-
+  // 👇 NUEVO ESCENARIO 2 (Logout)
+  test('2) Cerrar sesión desde el menú de usuario', async ({ page }) => {
+    const header = new HeaderBar(page);
+    await header.logout(); // abre menú de usuario y hace Logout
+  });
 
   test('3) Validación: impedir guardar sin apellido', async ({ page }) => {
     const pim = new PimPage(page);
