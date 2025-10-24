@@ -10,7 +10,7 @@ test.describe('OrangeHRM - PIM (Employee Management)', () => {
     await login.loginAsAdmin();
 
     const pim = new PimPage(page);
-    await pim.gotoList(); // directo a PIM List, estable
+    await pim.gotoList(); // directo a PIM List
   });
 
   test('1) Crear empleado exitosamente', async ({ page }) => {
@@ -19,7 +19,7 @@ test.describe('OrangeHRM - PIM (Employee Management)', () => {
     await pim.addEmployee({ first: 'Brayan' + unique, last: 'Leal' + unique });
   });
 
-  // 👇 NUEVO ESCENARIO 2 (Logout)
+  // caSE 2
   test('2) Cerrar sesión desde el menú de usuario', async ({ page }) => {
     const header = new HeaderBar(page);
     await header.logout(); // abre menú de usuario y hace Logout
